@@ -10,6 +10,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   flip_card:
   http:
+  shared_preferences:
 
 dev_dependencies:
   flutter_test:

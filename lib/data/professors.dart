@@ -11,4 +11,6 @@ Map<String, String> professors = {
   'IOT Lab': 'Srishti Sharma',
   'CD': 'Kavita Pandya',
   'DM': 'Don\'t Know',
+  'SPM': 'Don\'t Know',
+  'SPM Lab': 'Don\'t Know',
 };

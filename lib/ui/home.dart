@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flip_card/flip_card.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:kalcy/data/timetable.dart';
 import 'package:kalcy/data/professors.dart';
@@ -18,6 +19,21 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _weekDay = DateTime.now().weekday;
   String _class = '7CE2';
+  String _theme = 'Dark';
+
+  @override
+  void initState() {
+    super.initState();
+    getDefaults();
+  }
+
+  void getDefaults() async {
+    var sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      _class = sharedPreferences.getString('class') ?? '7CE2';
+      _theme = sharedPreferences.getString('theme') ?? 'Dark';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +64,7 @@ class _HomePageState extends State<HomePage> {
     }
     return Scaffold(
         appBar: AppBar(
+          brightness: _theme == 'Light' ? Brightness.light : Brightness.dark,
           title: Text('Kalcy'),
           actions: <Widget>[
             GestureDetector(
@@ -73,6 +90,14 @@ class _HomePageState extends State<HomePage> {
                         DropdownMenuItem(
                           child: Text('7 CS - 2'),
                           value: '7CS2',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('7 IT - 1'),
+                          value: '7IT1',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('7 IT - 2'),
+                          value: '7IT2',
                         ),
                       ],
                       onChanged: (v) {
@@ -186,7 +211,10 @@ class _HomePageState extends State<HomePage> {
           child: ListView(
             children: <Widget>[
               DrawerHeader(
-                decoration: BoxDecoration(color: Colors.blueGrey[800]),
+                decoration: BoxDecoration(
+                    color: _theme == 'Dark'
+                        ? Colors.blueGrey[800]
+                        : Colors.blue[100]),
                 child: Center(
                     child: FlutterLogo(
                   colors: Colors.yellow,
@@ -208,22 +236,23 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         body: FlipCard(
-          front: FrontCard(frontData),
-          back: BackCard(),
+          front: FrontCard(frontData, _theme),
+          back: BackCard(_theme),
         ));
   }
 }
 
 class FrontCard extends StatelessWidget {
   final dynamic _data;
+  final dynamic _theme;
 
-  FrontCard(this._data);
+  FrontCard(this._data, this._theme);
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        color: Colors.blueGrey[800],
+        color: _theme == 'Dark' ? Colors.blueGrey[800] : Colors.amber[800],
         margin: EdgeInsets.all(40),
         width: double.infinity,
         height: double.infinity,
@@ -247,11 +276,15 @@ class FrontCard extends StatelessWidget {
 }
 
 class BackCard extends StatelessWidget {
+  final dynamic _theme;
+
+  BackCard(this._theme);
+
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        color: Colors.blueGrey[800],
+        color: _theme == 'Dark' ? Colors.blueGrey[800] : Colors.amber[800],
         margin: EdgeInsets.all(40),
         width: double.infinity,
         height: double.infinity,
