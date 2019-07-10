@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:kalcy/ui/home.dart';
+import 'package:kalcy/ui/department.dart';
 import 'package:kalcy/ui/settings.dart';
 
 void main() => runApp(MyApp());
@@ -25,6 +26,7 @@ class _MyAppState extends State<MyApp> {
       initialRoute: '/',
       routes: {
         '/': (context) => HomePage(),
+        '/department': (context) => DepartmentPage(),
         '/settings': (context) => SettingsPage(),
       },
     );

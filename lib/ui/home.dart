@@ -224,6 +224,20 @@ class _HomePageState extends State<HomePage> {
               InkWell(
                 splashColor: Colors.white,
                 child: ListTile(
+                  leading: Icon(Icons.people),
+                  title: Text('Department'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/department');
+                  },
+                ),
+              ),
+              Divider(
+                color: Colors.white,
+              ),
+              InkWell(
+                splashColor: Colors.white,
+                child: ListTile(
                   leading: Icon(Icons.settings),
                   title: Text('Settings'),
                   onTap: () {
@@ -231,7 +245,28 @@ class _HomePageState extends State<HomePage> {
                     Navigator.pushNamed(context, '/settings');
                   },
                 ),
-              )
+              ),
+              InkWell(
+                splashColor: Colors.white,
+                child: ListTile(
+                  leading: Icon(Icons.info),
+                  title: Text('About'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    showAboutDialog(
+                        context: context,
+                        applicationName: "Kalcy",
+                        applicationVersion: "1.0.1",
+                        applicationIcon: Center(
+                            child: Image.asset(
+                          'assets/app.png',
+                          width: 40,
+                          height: 40,
+                        )),
+                        children: [Text("Kayo Lecture Chhe?")]);
+                  },
+                ),
+              ),
             ],
           ),
         ),
