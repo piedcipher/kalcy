@@ -19,7 +19,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _weekDay = DateTime.now().weekday;
   String _class = '7CE2';
-  String _theme = 'Dark';
 
   @override
   void initState() {
@@ -31,7 +30,6 @@ class _HomePageState extends State<HomePage> {
     var sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
       _class = sharedPreferences.getString('class') ?? '7CE2';
-      _theme = sharedPreferences.getString('theme') ?? 'Dark';
     });
   }
 
@@ -52,7 +50,11 @@ class _HomePageState extends State<HomePage> {
                       fontStyle: FontStyle.italic),
                 ),
                 isThreeLine: true,
-                subtitle: Text(professors[lecture].toString()),
+                subtitle: Text(professors[_class.substring(0, 3)][
+                        lecture.contains('Lab')
+                            ? lecture.split('-')[0].trim()
+                            : lecture]
+                    .toString()),
                 title: Text(
                   lecture,
                   style: TextStyle(
@@ -64,7 +66,6 @@ class _HomePageState extends State<HomePage> {
     }
     return Scaffold(
         appBar: AppBar(
-          brightness: _theme == 'Light' ? Brightness.light : Brightness.dark,
           title: Text('Kalcy'),
           actions: <Widget>[
             GestureDetector(
@@ -211,13 +212,10 @@ class _HomePageState extends State<HomePage> {
           child: ListView(
             children: <Widget>[
               DrawerHeader(
-                decoration: BoxDecoration(
-                    color: _theme == 'Dark'
-                        ? Colors.blueGrey[800]
-                        : Colors.blue[100]),
+                decoration: BoxDecoration(color: Colors.yellow[300]),
                 child: Center(
                     child: FlutterLogo(
-                  colors: Colors.yellow,
+                  colors: Colors.indigo,
                   size: 50,
                 )),
               ),
@@ -231,9 +229,6 @@ class _HomePageState extends State<HomePage> {
                     Navigator.pushNamed(context, '/department');
                   },
                 ),
-              ),
-              Divider(
-                color: Colors.white,
               ),
               InkWell(
                 splashColor: Colors.white,
@@ -271,24 +266,23 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         body: FlipCard(
-          front: FrontCard(frontData, _theme),
-          back: BackCard(_theme),
+          front: FrontCard(frontData),
+          back: BackCard(),
         ));
   }
 }
 
 class FrontCard extends StatelessWidget {
   final dynamic _data;
-  final dynamic _theme;
 
-  FrontCard(this._data, this._theme);
+  FrontCard(this._data);
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        color: _theme == 'Dark' ? Colors.blueGrey[800] : Colors.amber[800],
-        margin: EdgeInsets.all(40),
+        color: Colors.pink[300],
+        margin: EdgeInsets.all(30),
         width: double.infinity,
         height: double.infinity,
         child: Center(
@@ -311,15 +305,11 @@ class FrontCard extends StatelessWidget {
 }
 
 class BackCard extends StatelessWidget {
-  final dynamic _theme;
-
-  BackCard(this._theme);
-
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        color: _theme == 'Dark' ? Colors.blueGrey[800] : Colors.amber[800],
+        color: Colors.pink[300],
         margin: EdgeInsets.all(40),
         width: double.infinity,
         height: double.infinity,
