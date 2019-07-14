@@ -16,8 +16,8 @@ List<String> departmentMembers = [
   'Raunak Patel',
   'Khushbu Maurya',
   'Jay Dave',
-  'Bhavin Fataniya'
-      'Srishti Sharma',
+  'Bhavin Fataniya',
+  'Srishti Sharma',
 ];
 
 class DepartmentPage extends StatelessWidget {
@@ -32,9 +32,7 @@ class DepartmentPage extends StatelessWidget {
               splashColor: Colors.white,
               child: ListTile(
                 title: Text(departmentMembers[i]),
-                onTap: () {
-
-                },
+                onTap: () {},
               ),
             ),
         itemCount: departmentMembers.length,
