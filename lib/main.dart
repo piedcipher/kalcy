@@ -15,7 +15,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  Brightness _theme = Brightness.dark;
+  Brightness _theme;
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +27,15 @@ class _MyAppState extends State<MyApp> {
       routes: {
         '/': (context) => HomePage(),
         '/department': (context) => DepartmentPage(),
-        '/settings': (context) => SettingsPage(),
+        '/settings': (context) => SettingsPage(this.themer),
       },
     );
+  }
+
+  void themer(String theme) {
+    setState(() {
+      _theme = theme == 'Dark' ? Brightness.dark : Brightness.light;
+    });
   }
 
   @override
@@ -41,7 +47,7 @@ class _MyAppState extends State<MyApp> {
   void getDefaults() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
-      if(sharedPreferences.getString('theme') == 'Light') {
+      if (sharedPreferences.getString('theme') == 'Light') {
         _theme = Brightness.light;
       } else {
         _theme = Brightness.dark;

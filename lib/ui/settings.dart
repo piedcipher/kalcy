@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+Function themer;
+
 class SettingsPage extends StatefulWidget {
+  SettingsPage(Function themerCallback) {
+    themer = themerCallback;
+  }
+
   @override
   _SettingsPageState createState() => _SettingsPageState();
 }
@@ -10,6 +16,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   String _currentClass = '7CE2';
   String _currentTheme = 'Dark';
+  SharedPreferences sharedPreferences;
 
   @override
   void initState() {
@@ -78,10 +85,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 value: _currentTheme,
                 decoration: InputDecoration(labelText: 'Theme'),
                 onChanged: (v) {
-                  setTheme();
                   setState(() {
                     _currentTheme = v;
                   });
+                  setTheme();
+                  themer(_currentTheme);
                 },
               ),
             ],
@@ -92,7 +100,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void getDefaults() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
       _currentClass = sharedPreferences.getString('class') ?? '7CE2';
       _currentTheme = sharedPreferences.getString('theme') ?? 'Dark';
@@ -100,12 +108,10 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void setClass() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString('class', _currentClass);
   }
 
   void setTheme() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString('theme', _currentTheme);
   }
 }
