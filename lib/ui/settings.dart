@@ -65,10 +65,10 @@ class _SettingsPageState extends State<SettingsPage> {
                 value: _currentClass,
                 decoration: InputDecoration(labelText: 'Class'),
                 onChanged: (v) {
-                  setClass();
                   setState(() {
                     _currentClass = v;
                   });
+                  setClass();
                 },
               ),
               DropdownButtonFormField(
