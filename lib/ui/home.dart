@@ -7,9 +7,9 @@ import 'package:flip_card/flip_card.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:kalcy/data/timetable.dart';
-import 'package:kalcy/data/professors.dart';
-import 'package:kalcy/data/days.dart';
+import 'package:Kalcy/data/timetable.dart';
+import 'package:Kalcy/data/professors.dart';
+import 'package:Kalcy/data/days.dart';
 
 class HomePage extends StatefulWidget {
   @override
