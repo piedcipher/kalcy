@@ -16,6 +16,8 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   String _currentClass = '7CE2';
   String _currentTheme = 'Dark';
+  String _currentPrimarySwatch = 'Blue';
+  bool _disablePrimarySwatchPreference = true;
   SharedPreferences sharedPreferences;
 
   @override
@@ -87,11 +89,91 @@ class _SettingsPageState extends State<SettingsPage> {
                 onChanged: (v) {
                   setState(() {
                     _currentTheme = v;
+                    _disablePrimarySwatchPreference = _currentTheme == 'Dark';
                   });
                   setTheme();
-                  themer(_currentTheme);
+                  themer(_currentTheme, _currentPrimarySwatch);
                 },
               ),
+              _disablePrimarySwatchPreference
+                  ? Container()
+                  : DropdownButtonFormField(
+                      items: [
+                        DropdownMenuItem(
+                          child: Text('Blue'),
+                          value: 'Blue',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Indigo'),
+                          value: 'Indigo',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Cyan'),
+                          value: 'Cyan',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Light Blue'),
+                          value: 'Light Blue',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Teal'),
+                          value: 'Teal',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Red'),
+                          value: 'Red',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Green'),
+                          value: 'Green',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Yellow'),
+                          value: 'Yellow',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Lime'),
+                          value: 'Lime',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Amber'),
+                          value: 'Amber',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Orange'),
+                          value: 'Orange',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Deep Orange'),
+                          value: 'Deep Orange',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Purple'),
+                          value: 'Purple',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Deep Purple'),
+                          value: 'Deep Purple',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Brown'),
+                          value: 'Brown',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Pink'),
+                          value: 'Pink',
+                        ),
+                      ],
+                      value: _currentPrimarySwatch,
+                      decoration: InputDecoration(labelText: 'Primary Color'),
+                      onChanged: (v) {
+                        setState(() {
+                          _currentPrimarySwatch = v;
+                        });
+                        setPrimarySwatch();
+                        themer(_currentTheme, _currentPrimarySwatch);
+                      },
+                    ),
             ],
           ),
         ),
@@ -104,6 +186,9 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       _currentClass = sharedPreferences.getString('class') ?? '7CE2';
       _currentTheme = sharedPreferences.getString('theme') ?? 'Dark';
+      _currentPrimarySwatch =
+          sharedPreferences.getString('primarySwatch') ?? 'Blue';
+      _disablePrimarySwatchPreference = _currentTheme == 'Dark';
     });
   }
 
@@ -113,5 +198,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
   void setTheme() async {
     sharedPreferences.setString('theme', _currentTheme);
+  }
+
+  void setPrimarySwatch() async {
+    sharedPreferences.setString('primarySwatch', _currentPrimarySwatch);
   }
 }
