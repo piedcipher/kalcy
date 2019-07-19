@@ -1,6 +1,7 @@
 name: Kalcy
 description: Kayo Lecture Chhe?
-version: 1.0.1
+version: 1.0.2
+author: Tirth
 environment:
   sdk: ">=2.1.0 <3.0.0"
 
@@ -8,8 +9,6 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^0.1.2
-  flip_card:
-  http:
   shared_preferences:
 
 dev_dependencies:

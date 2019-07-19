@@ -34,7 +34,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.only(left: 16, right: 16, top: 8),
+          margin: EdgeInsets.only(left: 12, right: 12),
           child: Column(
             children: <Widget>[
               DropdownButtonFormField(
@@ -65,7 +65,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ],
                 value: _currentClass,
-                decoration: InputDecoration(labelText: 'Class'),
+                decoration: InputDecoration(
+                  labelText: 'Class',
+                  helperText: 'Restart the app after changing Default Class.',
+                ),
                 onChanged: (v) {
                   setState(() {
                     _currentClass = v;
@@ -114,6 +117,10 @@ class _SettingsPageState extends State<SettingsPage> {
                         DropdownMenuItem(
                           child: Text('Light Blue'),
                           value: 'Light Blue',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('Light Green'),
+                          value: 'Light Green',
                         ),
                         DropdownMenuItem(
                           child: Text('Teal'),
