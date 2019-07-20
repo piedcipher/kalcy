@@ -45,9 +45,9 @@ class _MyAppState extends State<MyApp> {
   void getDefaults() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
-      _theme = appTheme[sharedPreferences.getString('theme')];
-      _primarySwatch =
-          primarySwatchThemes[sharedPreferences.getString('primarySwatch')];
+      _theme = appTheme[sharedPreferences.getString('theme') ?? 'Dark'];
+      _primarySwatch = primarySwatchThemes[
+          sharedPreferences.getString('primarySwatch') ?? 'Blue'];
     });
   }
 
