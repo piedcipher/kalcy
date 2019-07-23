@@ -1,6 +1,6 @@
 Map<String, Map<String, String>> professors = {
   '7CE': {
-    'MC': 'Don\'t Know',
+    'MC': 'Hiren Mer',
     'MC Lab': 'Kavita Pandya',
     'BDA': 'Naiswita Parmar',
     'BDA Lab': 'Naiswita Parmar',
