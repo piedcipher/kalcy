@@ -416,7 +416,7 @@ class _HomePageState extends State<HomePage> {
                         showAboutDialog(
                             context: context,
                             applicationName: "Kalcy",
-                            applicationVersion: "1.0.2",
+                            applicationVersion: "1.0.3",
                             applicationIcon: Image.asset(
                               'assets/app.png',
                               width: 45,
