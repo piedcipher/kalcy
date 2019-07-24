@@ -15,7 +15,7 @@ Map<String, Map<String, String>> professors = {
   },
   '7CS': {
     'MC': 'Sejal Thakkar, Krupa Patel',
-    'MC Lab': 'Krupa Patel',
+    'MC Lab': 'Kavita Pandya',
     'BDA': 'Naiswita Parmar',
     'BDA Lab': 'Naiswita Parmar',
     '.NET': 'Manisha Valera',
@@ -29,10 +29,10 @@ Map<String, Map<String, String>> professors = {
   },
   '7IT': {
     'MC': 'Zalak Trivedi, Kavita Pandya',
-    'MC Lab': 'Zalak Trivedi, Kavita Pandya',
+    'MC Lab': 'Kavita Pandya',
     'BDA': 'Naiswita Parmar',
     'BDA Lab': 'Naiswita Parmar',
-    '.NET': 'Manisha Valera',
+    '.NET': 'Pruthvi Patel, Manisha Valera',
     '.NET Lab': 'Manisha Valera',
     'CNS': 'Roshni Patel',
     'CNS Lab': 'Roshni Patel',
