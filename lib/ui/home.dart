@@ -13,7 +13,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _weekDay = DateTime.now().weekday;
-  String _class = '7CE2';
+  String _class;
+  SharedPreferences _sharedPreferences;
 
   @override
   void initState() {
@@ -22,9 +23,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void getDefaults() async {
-    var sharedPreferences = await SharedPreferences.getInstance();
+    _sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
-      _class = sharedPreferences.getString('class') ?? '7CE2';
+      _class = _sharedPreferences.getString('class');
     });
   }
 
@@ -32,7 +33,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     dynamic cardData = 'Holiday';
     int i = 0;
-    if (_weekDay < 6) {
+    if (_weekDay < 6 && _class != null) {
       List<String> timings = timetable[_class][_weekDay].keys.toList();
       cardData = timetable[_class][_weekDay]
           .values
@@ -74,288 +75,369 @@ class _HomePageState extends State<HomePage> {
               ))
           .toList();
     }
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Kalcy'),
-        actions: <Widget>[
-          GestureDetector(
-            child: Center(
-              child: Container(
-                margin: EdgeInsets.only(right: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                        margin: EdgeInsets.only(right: 8),
-                        child: Icon(
-                          Icons.school,
-                          size: 20,
-                        )),
-                    Text(_class)
-                  ],
-                ),
-              ),
+    return _class == null
+        ? Scaffold(
+            appBar: AppBar(
+              title: Text('Select Default Class'),
+              centerTitle: true,
             ),
-            onTap: () {
-              showModalBottomSheet(
-                  context: context,
-                  builder: (builder) => Center(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              ListTile(
-                                title: Text(
-                                  '7 CE - 1',
-                                  textAlign: TextAlign.center,
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    _class = '7CE1';
-                                    Navigator.of(context).pop();
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text(
-                                  '7 CE - 2',
-                                  textAlign: TextAlign.center,
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    _class = '7CE2';
-                                    Navigator.of(context).pop();
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text(
-                                  '7 CS - 1',
-                                  textAlign: TextAlign.center,
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    _class = '7CS1';
-                                    Navigator.of(context).pop();
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text(
-                                  '7 CS - 2',
-                                  textAlign: TextAlign.center,
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    _class = '7CS2';
-                                    Navigator.of(context).pop();
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text(
-                                  '7 IT - 1',
-                                  textAlign: TextAlign.center,
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    _class = '7IT1';
-                                    Navigator.of(context).pop();
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text(
-                                  '7 IT - 2',
-                                  textAlign: TextAlign.center,
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    _class = '7IT2';
-                                    Navigator.of(context).pop();
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
+            body: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.all(8),
+                    child: DropdownButtonFormField(
+                      items: [
+                        DropdownMenuItem(
+                          child: Text('7 CE - 1'),
+                          value: '7CE1',
                         ),
-                      ));
-            },
-          ),
-          GestureDetector(
-            child: Center(
-              child: Container(
-                margin: EdgeInsets.only(right: 12),
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                        margin: EdgeInsets.only(right: 8),
-                        child: Icon(
-                          Icons.today,
-                          size: 20,
-                        )),
-                    Text(days[_weekDay]),
-                  ],
-                ),
-              ),
-            ),
-            onTap: () {
-              showModalBottomSheet(
-                  context: context,
-                  builder: (builder) => Center(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              ListTile(
+                        DropdownMenuItem(
+                          child: Text('7 CE - 2'),
+                          value: '7CE2',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('7 CS - 1'),
+                          value: '7CS1',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('7 CS - 2'),
+                          value: '7CS2',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('7 IT - 1'),
+                          value: '7IT1',
+                        ),
+                        DropdownMenuItem(
+                          child: Text('7 IT - 2'),
+                          value: '7IT2',
+                        ),
+                      ],
+                      hint: Text('Select Default Class'),
+                      value: _class,
+                      onChanged: (v) {
+                        showDialog(
+                            context: context,
+                            builder: (builder) {
+                              return AlertDialog(
                                 title: Text(
-                                  'Today',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
+                                    'Do you want to set \"$v\" as your default class.'),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    child: Text('Cancel'),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
                                   ),
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    _weekDay = DateTime.now().weekday;
-                                    Navigator.of(context).pop();
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text(
-                                  'Monday',
-                                  textAlign: TextAlign.center,
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    _weekDay = 1;
-                                    Navigator.of(context).pop();
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text(
-                                  'Tuesday',
-                                  textAlign: TextAlign.center,
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    _weekDay = 2;
-                                    Navigator.of(context).pop();
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text(
-                                  'Wednesday',
-                                  textAlign: TextAlign.center,
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    _weekDay = 3;
-                                    Navigator.of(context).pop();
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text(
-                                  'Thursday',
-                                  textAlign: TextAlign.center,
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    _weekDay = 4;
-                                    Navigator.of(context).pop();
-                                  });
-                                },
-                              ),
-                              ListTile(
-                                title: Text(
-                                  'Friday',
-                                  textAlign: TextAlign.center,
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    _weekDay = 5;
-                                    Navigator.of(context).pop();
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ));
-            },
-          ),
-        ],
-      ),
-      drawer: Drawer(
-        child: ListView(
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(color: Colors.yellow),
-              child: Center(
-                  child: Image.asset(
-                'assets/app.png',
-                width: 70,
-                height: 70,
-              )),
-            ),
-            InkWell(
-              splashColor: Colors.white,
-              child: ListTile(
-                leading: Icon(Icons.people),
-                title: Text('Department'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/department');
-                },
+                                  FlatButton(
+                                    child: Text(
+                                      'Save',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    onPressed: () async {
+                                      setState(() async {
+                                        _class = v;
+                                        _sharedPreferences.setString(
+                                            'class', _class);
+                                      });
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                                content: Text(
+                                    'You can always change it later from settings.'),
+                              );
+                            });
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
-            InkWell(
-              splashColor: Colors.white,
-              child: ListTile(
-                leading: Icon(Icons.settings),
-                title: Text('Settings'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/settings');
-                },
-              ),
-            ),
-            InkWell(
-              splashColor: Colors.white,
-              child: ListTile(
-                leading: Icon(Icons.info),
-                title: Text('About'),
-                onTap: () {
-                  Navigator.pop(context);
-                  showAboutDialog(
-                      context: context,
-                      applicationName: "Kalcy",
-                      applicationVersion: "1.0.2",
-                      applicationIcon: Image.asset(
-                        'assets/app.png',
-                        width: 45,
+          )
+        : Scaffold(
+            appBar: AppBar(
+              title: Text('Kalcy'),
+              actions: <Widget>[
+                GestureDetector(
+                  child: Center(
+                    child: Container(
+                      margin: EdgeInsets.only(right: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                              margin: EdgeInsets.only(right: 8),
+                              child: Icon(
+                                Icons.school,
+                                size: 20,
+                              )),
+                          Text(_class)
+                        ],
                       ),
-                      children: [
-                        Text("Kayo Lecture Chhe?"),
-                        Text(
-                          "\nMade with \u2764 by Tirth",
-                          style: TextStyle(fontWeight: FontWeight.w500),
-                        )
-                      ]);
-                },
+                    ),
+                  ),
+                  onTap: () {
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (builder) => Center(
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    ListTile(
+                                      title: Text(
+                                        '7 CE - 1',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          _class = '7CE1';
+                                          Navigator.of(context).pop();
+                                        });
+                                      },
+                                    ),
+                                    ListTile(
+                                      title: Text(
+                                        '7 CE - 2',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          _class = '7CE2';
+                                          Navigator.of(context).pop();
+                                        });
+                                      },
+                                    ),
+                                    ListTile(
+                                      title: Text(
+                                        '7 CS - 1',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          _class = '7CS1';
+                                          Navigator.of(context).pop();
+                                        });
+                                      },
+                                    ),
+                                    ListTile(
+                                      title: Text(
+                                        '7 CS - 2',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          _class = '7CS2';
+                                          Navigator.of(context).pop();
+                                        });
+                                      },
+                                    ),
+                                    ListTile(
+                                      title: Text(
+                                        '7 IT - 1',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          _class = '7IT1';
+                                          Navigator.of(context).pop();
+                                        });
+                                      },
+                                    ),
+                                    ListTile(
+                                      title: Text(
+                                        '7 IT - 2',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          _class = '7IT2';
+                                          Navigator.of(context).pop();
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ));
+                  },
+                ),
+                GestureDetector(
+                  child: Center(
+                    child: Container(
+                      margin: EdgeInsets.only(right: 12),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                              margin: EdgeInsets.only(right: 8),
+                              child: Icon(
+                                Icons.today,
+                                size: 20,
+                              )),
+                          Text(days[_weekDay]),
+                        ],
+                      ),
+                    ),
+                  ),
+                  onTap: () {
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (builder) => Center(
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    ListTile(
+                                      title: Text(
+                                        'Today',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          _weekDay = DateTime.now().weekday;
+                                          Navigator.of(context).pop();
+                                        });
+                                      },
+                                    ),
+                                    ListTile(
+                                      title: Text(
+                                        'Monday',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          _weekDay = 1;
+                                          Navigator.of(context).pop();
+                                        });
+                                      },
+                                    ),
+                                    ListTile(
+                                      title: Text(
+                                        'Tuesday',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          _weekDay = 2;
+                                          Navigator.of(context).pop();
+                                        });
+                                      },
+                                    ),
+                                    ListTile(
+                                      title: Text(
+                                        'Wednesday',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          _weekDay = 3;
+                                          Navigator.of(context).pop();
+                                        });
+                                      },
+                                    ),
+                                    ListTile(
+                                      title: Text(
+                                        'Thursday',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          _weekDay = 4;
+                                          Navigator.of(context).pop();
+                                        });
+                                      },
+                                    ),
+                                    ListTile(
+                                      title: Text(
+                                        'Friday',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          _weekDay = 5;
+                                          Navigator.of(context).pop();
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ));
+                  },
+                ),
+              ],
+            ),
+            drawer: Drawer(
+              child: ListView(
+                children: <Widget>[
+                  DrawerHeader(
+                    decoration: BoxDecoration(color: Colors.yellow),
+                    child: Center(
+                        child: Image.asset(
+                      'assets/app.png',
+                      width: 70,
+                      height: 70,
+                    )),
+                  ),
+                  InkWell(
+                    splashColor: Colors.white,
+                    child: ListTile(
+                      leading: Icon(Icons.people),
+                      title: Text('Department'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, '/department');
+                      },
+                    ),
+                  ),
+                  InkWell(
+                    splashColor: Colors.white,
+                    child: ListTile(
+                      leading: Icon(Icons.settings),
+                      title: Text('Settings'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, '/settings');
+                      },
+                    ),
+                  ),
+                  InkWell(
+                    splashColor: Colors.white,
+                    child: ListTile(
+                      leading: Icon(Icons.info),
+                      title: Text('About'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        showAboutDialog(
+                            context: context,
+                            applicationName: "Kalcy",
+                            applicationVersion: "1.0.2",
+                            applicationIcon: Image.asset(
+                              'assets/app.png',
+                              width: 45,
+                            ),
+                            children: [
+                              Text("Kayo Lecture Chhe?"),
+                              Text(
+                                "\nMade with \u2764 by Tirth",
+                                style: TextStyle(fontWeight: FontWeight.w500),
+                              )
+                            ]);
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
-      body: Container(
-        child: TimeTableCard(cardData),
-      ),
-    );
+            body: Container(
+              child: TimeTableCard(cardData),
+            ),
+          );
   }
 }
 

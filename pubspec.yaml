@@ -1,6 +1,6 @@
 name: Kalcy
 description: Kayo Lecture Chhe?
-version: 1.0.2
+version: 1.0.3
 author: Tirth
 environment:
   sdk: ">=2.1.0 <3.0.0"
